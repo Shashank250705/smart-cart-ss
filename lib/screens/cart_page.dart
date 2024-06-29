@@ -1,7 +1,6 @@
 import 'package:bloc_flutter/screens/payment_screen.dart';
 import 'package:flutter/material.dart';
 
-//.
 class CartPage extends StatefulWidget {
   final List<Map<String, dynamic>> cartItems;
 
@@ -16,7 +15,11 @@ class _CartPageState extends State<CartPage> {
 
   void _updateQuantity(int index, int quantity) {
     setState(() {
-      cartItems[index]['quantity'] = quantity;
+      if (quantity <= 0) {
+        cartItems.removeAt(index);
+      } else {
+        cartItems[index]['quantity'] = quantity;
+      }
     });
   }
 
@@ -31,7 +34,9 @@ class _CartPageState extends State<CartPage> {
   @override
   Widget build(BuildContext context) {
     double totalPrice = cartItems.fold(
-        0, (sum, item) => sum + (item['price'] * item['quantity']));
+      0,
+      (sum, item) => sum + (item['price'] * item['quantity']),
+    );
 
     return Scaffold(
       appBar: AppBar(
@@ -57,9 +62,7 @@ class _CartPageState extends State<CartPage> {
                           IconButton(
                             icon: const Icon(Icons.remove),
                             onPressed: () {
-                              if (item['quantity'] > 1) {
-                                _updateQuantity(index, item['quantity'] - 1);
-                              }
+                              _updateQuantity(index, item['quantity'] - 1);
                             },
                           ),
                           Text('${item['quantity']}'),
@@ -74,7 +77,8 @@ class _CartPageState extends State<CartPage> {
                     ],
                   ),
                   trailing: Text(
-                      '\$${(item['price'] * item['quantity']).toStringAsFixed(2)}'),
+                    '\$${(item['price'] * item['quantity']).toStringAsFixed(2)}',
+                  ),
                 );
               },
             ),
@@ -99,8 +103,9 @@ class _CartPageState extends State<CartPage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>
-                              PaymentPage(totalAmount: totalPrice)),
+                        builder: (context) =>
+                            PaymentPage(totalAmount: totalPrice),
+                      ),
                     );
                   },
                   child: const Text('Proceed to Payment'),

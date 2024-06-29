@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc_flutter/screens/ai_bot.dart';
+
 import 'package:bloc_flutter/screens/my_drawer_header.dart';
 import 'package:bloc_flutter/screens/pages/page1.dart';
 import 'package:bloc_flutter/screens/pages/page2.dart';
@@ -22,7 +23,7 @@ class Homepage extends StatefulWidget {
 
 class _HomepageState extends State<Homepage> {
   final PageController _controller1 = PageController();
-  final PageController _controller2 = PageController();
+  //final PageController _controller2 = PageController();
   final PageController _controller3 = PageController();
   Timer? _timer;
 
@@ -35,10 +36,10 @@ class _HomepageState extends State<Homepage> {
       'price': 150.00,
     },
     {
-      'barcode': '0806360623008',
+      'barcode': '8901765126207',
       'photo':
           'https://imgs.search.brave.com/g3gxQrcvlNO0MK-EHV8pC8CEgh7NcDn-lrgsILMc5cs/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9tLm1l/ZGlhLWFtYXpvbi5j/b20vaW1hZ2VzL0kv/MzE2czdINytaNEwu/anBn',
-      'name': 'Whit glow loation',
+      'name': 'Whit glow lotion',
       'price': 135.00,
     },
     //.
@@ -96,7 +97,7 @@ class _HomepageState extends State<Homepage> {
         duration: const Duration(milliseconds: 500),
         curve: Curves.easeIn,
       );
-      int nextPage2 = _controller2.page!.round() + 1;
+      /*int nextPage2 = _controller2.page!.round() + 1;
       if (nextPage2 >= 4) {
         nextPage2 = 0;
       }
@@ -104,7 +105,7 @@ class _HomepageState extends State<Homepage> {
         nextPage2,
         duration: const Duration(milliseconds: 500),
         curve: Curves.easeIn,
-      );
+      );*/
     });
   }
 
@@ -112,7 +113,7 @@ class _HomepageState extends State<Homepage> {
   void dispose() {
     _timer?.cancel();
     _controller1.dispose();
-    _controller2.dispose();
+    //_controller2.dispose();
     _controller3.dispose();
     super.dispose();
   }
@@ -133,7 +134,8 @@ class _HomepageState extends State<Homepage> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => WishlistPage(wishlistItems: wishlistItems),
+            builder: (context) => WishlistPage(
+                wishlistItems: wishlistItems, cartItems: cartItems),
           ),
         );
       }
@@ -145,17 +147,34 @@ class _HomepageState extends State<Homepage> {
       var result = await BarcodeScanner.scan();
       if (result.type == ResultType.Barcode) {
         String barcode = result.rawContent;
-        for (var item in items) {
-          if (item['barcode'] == barcode) {
-            setState(() {
-              cartItems.add(item);
-            });
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Product added to cart')),
-            );
-            break;
+        bool itemFound = false;
+        setState(() {
+          for (var cartItem in cartItems) {
+            if (cartItem['barcode'] == barcode) {
+              // Assuming you have a quantity field in cartItem
+              cartItem['quantity'] = (cartItem['quantity'] ?? 1) + 1;
+              itemFound = true;
+              break;
+            }
           }
-        }
+          if (!itemFound) {
+            for (var item in items) {
+              if (item['barcode'] == barcode) {
+                cartItems.add({
+                  'barcode': item['barcode'],
+                  'photo': item['photo'],
+                  'name': item['name'],
+                  'price': item['price'],
+                  'quantity': 1, // Assuming you start with a quantity of 1
+                });
+                break;
+              }
+            }
+          }
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Product added to cart')),
+        );
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -181,7 +200,8 @@ class _HomepageState extends State<Homepage> {
         child: Column(
           children: <Widget>[
             SizedBox(
-              height: 200.0,
+              height: 300.0,
+              width: 600,
               child: PageView(
                 controller: _controller1,
                 children: const <Widget>[
@@ -202,7 +222,7 @@ class _HomepageState extends State<Homepage> {
                 activeDotColor: Colors.purple,
               ),
             ),
-            const SizedBox(height: 4.0),
+            /*const SizedBox(height: 4.0),
             SizedBox(
               height: 200,
               child: PageView(
@@ -224,7 +244,8 @@ class _HomepageState extends State<Homepage> {
                 dotWidth: 10.0,
                 activeDotColor: Colors.purple,
               ),
-            ),
+            ),*/
+
             const SizedBox(height: 16.0),
             SizedBox(
               height: 300.0,
@@ -448,9 +469,10 @@ class _HomepageState extends State<Homepage> {
                 ],
               ),
             ),
-            const SizedBox(height: 10.0),
+            const SizedBox(height: 4.0),
             SizedBox(
-              height: 200.0,
+              height: 300.0,
+              //width: 00.0,
               child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemCount: items.length,
@@ -462,7 +484,7 @@ class _HomepageState extends State<Homepage> {
                         height: 300,
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(16.0),
+                          borderRadius: BorderRadius.circular(8.0),
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -473,13 +495,13 @@ class _HomepageState extends State<Homepage> {
                               ),
                               child: Image.network(
                                 items[index]['photo'],
-                                height: 80.0,
+                                height: 100.0,
                                 width: double.infinity,
                                 fit: BoxFit.cover,
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.all(8.0),
+                              padding: const EdgeInsets.all(6.0),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -490,7 +512,7 @@ class _HomepageState extends State<Homepage> {
                                       fontSize: 16.0,
                                     ),
                                   ),
-                                  const SizedBox(height: 1.0),
+                                  //const SizedBox(height: 1.0),
                                   Text(
                                     '\$ ${items[index]['price'].toString()}',
                                     style: const TextStyle(
@@ -529,13 +551,14 @@ class _HomepageState extends State<Homepage> {
                                           height: 24,
                                         ),
                                         onPressed: () {
-                                          // Implement add to wishlist functionality
+                                          setState(() {
+                                            wishlistItems.add(items[index]);
+                                          });
                                           ScaffoldMessenger.of(context)
                                               .showSnackBar(
                                             const SnackBar(
-                                              content:
-                                                  Text('Added to Wishlist'),
-                                            ),
+                                                content: Text(
+                                                    'Product added to wishlist')),
                                           );
                                         },
                                       ),
@@ -595,11 +618,11 @@ class _HomepageState extends State<Homepage> {
           ),
           BottomNavigationBarItem(
             icon: Lottie.asset(
-              'asset/animations/profile.json',
+              'asset/animations/wishlist.json',
               width: 24,
               height: 24,
             ),
-            label: 'Profile',
+            label: 'WishList',
           ),
         ],
         currentIndex: _selectedIndex,
@@ -644,6 +667,13 @@ class MyDrawerList extends StatelessWidget {
             },
           ),
           menuItem(
+            'asset/animations/notification.json',
+            'Notifications',
+            () {
+              // Handle Profile press
+            },
+          ),
+          menuItem(
             'asset/animations/info.json',
             'About us',
             () {
@@ -653,6 +683,13 @@ class MyDrawerList extends StatelessWidget {
           menuItem(
             'asset/animations/settings.json',
             'Settings',
+            () {
+              // Handle Profile press
+            },
+          ),
+          menuItem(
+            'asset/animations/signout.json',
+            'Sign Out',
             () {
               // Handle Profile press
             },
@@ -672,8 +709,8 @@ class MyDrawerList extends StatelessWidget {
             children: [
               Lottie.asset(
                 lottieUrl,
-                width: 24,
-                height: 24,
+                width: 30,
+                height: 30,
               ),
               const SizedBox(width: 20.0),
               Text(
