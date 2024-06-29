@@ -9,7 +9,7 @@ class Page3 extends StatelessWidget {
       body: Container(
           padding: const EdgeInsets.all(40),
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(20),
+            //borderRadius: BorderRadius.circular(20),
             child: Container(
                 decoration: const BoxDecoration(
               gradient: LinearGradient(
