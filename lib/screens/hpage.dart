@@ -41,6 +41,7 @@ class _HomepageState extends State<Homepage> {
       'name': 'Whit glow loation',
       'price': 135.00,
     },
+    //.
     {
       'photo':
           'https://imgs.search.brave.com/VXHNQuW-asIW6Qog0gd9B_hjRkneXnB2YJ4rT_GGi5o/rs:fit:860:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTcz/MjQyNzUwL3Bob3Rv/L2JhbmFuYS1idW5j/aC5qcGc_cz02MTJ4/NjEyJnc9MCZrPTIw/JmM9TUFjOEFYVno1/S3h3V2VFbWg3NVd3/SDZqX0hvdVJjekJG/QWh1bExBdFJVVT0',

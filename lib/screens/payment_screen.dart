@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+//.
 class PaymentPage extends StatelessWidget {
   final double totalAmount;
 

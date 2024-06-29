@@ -2,7 +2,7 @@ import 'package:bloc_flutter/screens/login.dart';
 import 'package:bloc_flutter/screens/signup.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-
+//.
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
 
