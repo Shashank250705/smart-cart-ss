@@ -1,4 +1,4 @@
-import 'package:bloc_flutter/screens/hpage.dart';
+/*import 'package:bloc_flutter/screens/hpage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -56,7 +56,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
       Fluttertoast.showToast(msg: 'Email verified successfully');
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const Homepage()),
+        MaterialPageRoute(builder: (context) => const Homepage(userData: null,)),
       );
     } else {
       Fluttertoast.showToast(msg: 'Email not verified yet');
@@ -106,3 +106,4 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
     );
   }
 }
+*/

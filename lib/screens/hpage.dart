@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:bloc_flutter/screens/ai_bot.dart';
+//import 'package:bloc_flutter/screens/ai_bot.dart';
 
 import 'package:bloc_flutter/screens/my_drawer_header.dart';
 import 'package:bloc_flutter/screens/pages/page1.dart';
@@ -8,6 +8,7 @@ import 'package:bloc_flutter/screens/pages/page2.dart';
 import 'package:bloc_flutter/screens/pages/page3.dart';
 import 'package:bloc_flutter/screens/pages/page4.dart';
 import 'package:bloc_flutter/screens/wish_list_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:barcode_scan2/barcode_scan2.dart';
 import 'package:lottie/lottie.dart';
@@ -15,7 +16,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'cart_page.dart';
 
 class Homepage extends StatefulWidget {
-  const Homepage({super.key});
+  const Homepage({super.key, required DocumentSnapshot<Object?> userData});
 
   @override
   _HomepageState createState() => _HomepageState();
