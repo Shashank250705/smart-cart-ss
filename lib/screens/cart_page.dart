@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:bloc_flutter/screens/payment_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -51,12 +53,24 @@ class _CartPageState extends State<CartPage> {
               itemBuilder: (context, index) {
                 final item = cartItems[index];
                 return ListTile(
-                  leading: Image.network(item['photo']),
+                  leading: item['photo'].startsWith('http')
+                      ? Image.network(
+                          item['photo'],
+                          width: 50,
+                          height: 50,
+                          fit: BoxFit.cover,
+                        )
+                      : Image.file(
+                          File(item['photo']),
+                          width: 50,
+                          height: 50,
+                          fit: BoxFit.cover,
+                        ),
                   title: Text(item['name']),
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('\$${item['price']}'),
+                      Text('₹${item['price']}'),
                       Row(
                         children: [
                           IconButton(
@@ -77,7 +91,7 @@ class _CartPageState extends State<CartPage> {
                     ],
                   ),
                   trailing: Text(
-                    '\$${(item['price'] * item['quantity']).toStringAsFixed(2)}',
+                    '₹${(item['price'] * item['quantity']).toStringAsFixed(2)}',
                   ),
                 );
               },
@@ -88,14 +102,14 @@ class _CartPageState extends State<CartPage> {
             child: Column(
               children: [
                 Text(
-                  'Total: \$${totalPrice.toStringAsFixed(2)}',
+                  'Total: \₹${totalPrice.toStringAsFixed(2)}',
                   style: const TextStyle(
                       fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 16),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.purple,
+                    backgroundColor: Colors.orange,
                     padding: const EdgeInsets.symmetric(
                         horizontal: 32, vertical: 12),
                   ),

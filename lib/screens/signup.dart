@@ -31,18 +31,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
         );
 
         // Store user data in Firestore
-        await _firestore.collection('users').doc(userCredential.user!.uid).set({
+        final userData = {
           'full_name': _fullNameController.text,
           'email': _emailController.text,
           'created_at': FieldValue.serverTimestamp(),
-        });
+          'admin': false,
+        };
 
-        // Navigate to the sign-in page or home page after successful sign-up
+        await _firestore
+            .collection('users')
+            .doc(userCredential.user!.uid)
+            .set(userData);
+
+        // Navigate to the home page after successful sign-up
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(
-            builder: (context) => const SignInScreen(),
-          ),
+          MaterialPageRoute(builder: (context) => SignInScreen()),
         );
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(

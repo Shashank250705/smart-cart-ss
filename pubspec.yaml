@@ -52,17 +52,28 @@ dependencies:
   mockito: ^5.4.4
   build_runner: ^2.4.9
   smooth_page_indicator: ^1.1.0
-  fluttertoast: ^8.2.6
-  razorpay_flutter: ^1.3.7
+  fluttertoast: ^8.2.6  
   pin_code_fields: ^8.0.1
   barcode_scan2: ^4.3.0
   google_generative_ai: ^0.4.3
   intl: ^0.19.0
   icons_plus: ^3.0.0
+  firebase_storage: ^11.7.0
+  flutter_barcode_scanner: ^2.0.0
+  firebase_messaging: ^14.9.4
+  flutter_local_notifications: ^17.2.1
+  image_picker: ^1.1.2
+  permission_handler: ^10.0.0
+  flutter_launcher_icons: ^0.13.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "asset/images/smartcart2.jpeg"
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

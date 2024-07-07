@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-//.
+
 class Page4 extends StatelessWidget {
   const Page4({super.key});
 
@@ -7,18 +7,15 @@ class Page4 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-          padding: const EdgeInsets.all(40),
-          child: ClipRRect(
-            //borderRadius: BorderRadius.circular(20),
-            child: Container(
-                decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Colors.blue, Colors.purple],
-                begin: Alignment.topRight,
-                end: Alignment.bottomLeft,
-              ),
-            )),
-          )),
+        child: Center(
+          child: Image.asset(
+            'asset/images/promotional_photo.avif', // Replace with your promotional photo path
+            width: double.infinity, // Adjust the width as needed
+            height: 400, // Adjust the height as needed
+            fit: BoxFit.fill, // Adjust the fit based on your design
+          ),
+        ),
+      ),
     );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:bloc_flutter/admin_page.dart';
 import 'package:bloc_flutter/screens/forgetpassword.dart';
 import 'package:bloc_flutter/screens/hpage.dart';
 import 'package:bloc_flutter/screens/signup.dart';
@@ -37,13 +38,21 @@ class _SignInScreenState extends State<SignInScreen> {
             .get();
 
         if (userData.exists) {
-          // Use the retrieved data if needed
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => Homepage(userData: userData),
-            ),
-          );
+          var userDataMap = userData.data() as Map<String, dynamic>;
+          // Check if the user has admin role
+          if (userDataMap['admin'] == true) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const AdminPage()),
+            );
+          } else {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => Homepage(userData: userData),
+              ),
+            );
+          }
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
