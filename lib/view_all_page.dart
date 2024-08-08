@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:bloc_flutter/screens/product_details.dart';
 import 'package:bloc_flutter/screens/item_search.dart';
 
+//viewpage
 class ViewAllPage extends StatefulWidget {
   const ViewAllPage({super.key});
 

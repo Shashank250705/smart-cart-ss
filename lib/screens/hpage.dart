@@ -19,6 +19,7 @@ import 'package:lottie/lottie.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'cart_page.dart';
 
+//homepage
 class Homepage extends StatefulWidget {
   final DocumentSnapshot<Object?> userData;
   const Homepage({super.key, required this.userData});

@@ -1,4 +1,4 @@
-// cart_item.dart
+// cart_item
 class CartItem {
   String barcode;
   String photo;

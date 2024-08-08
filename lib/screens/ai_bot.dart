@@ -4,6 +4,7 @@ import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 
+//chatbot
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -101,10 +102,9 @@ class _ChatScreenState extends State<ChatScreen> {
                       iconSize: 30,
                       style: ButtonStyle(
                         backgroundColor:
-                            MaterialStateProperty.all(Colors.deepPurple),
-                        foregroundColor:
-                            MaterialStateProperty.all(Colors.white),
-                        shape: MaterialStateProperty.all(const CircleBorder()),
+                            WidgetStateProperty.all(Colors.deepPurple),
+                        foregroundColor: WidgetStateProperty.all(Colors.white),
+                        shape: WidgetStateProperty.all(const CircleBorder()),
                       ),
                       onPressed: () {
                         sendMessage();

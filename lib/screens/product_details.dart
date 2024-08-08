@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
+//product details
 class ProductDetailsPage extends StatefulWidget {
   final Map<String, dynamic> product;
 

@@ -5,6 +5,7 @@ import 'package:bloc_flutter/widget/custom_scaffold.dart';
 import 'package:bloc_flutter/widget/welcome_button.dart';
 import 'package:flutter/material.dart';
 
+//welcome page
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+//custom
 class CustomScaffold extends StatelessWidget {
   const CustomScaffold({super.key, this.child});
   final Widget? child;

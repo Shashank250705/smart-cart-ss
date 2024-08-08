@@ -3,6 +3,7 @@ import 'package:bloc_flutter/screens/welcome_page.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
+//splash screen
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 

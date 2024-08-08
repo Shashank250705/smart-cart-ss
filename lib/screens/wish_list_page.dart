@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
+//wishlist page
 class WishlistPage extends StatefulWidget {
   final List<Map<String, dynamic>> wishlistItems;
   final List<Map<String, dynamic>> cartItems;

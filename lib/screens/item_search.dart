@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:bloc_flutter/screens/product_details.dart';
 
+//itemsearch
 class ItemSearch extends SearchDelegate<String> {
   final List<Map<String, dynamic>> items;
 
