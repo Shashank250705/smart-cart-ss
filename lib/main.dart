@@ -1,9 +1,9 @@
 import 'package:bloc_flutter/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
-//import 'package:bloc_flutter/features/home/ui/home.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
+//main.dart
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -18,10 +18,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-        debugShowCheckedModeBanner: false,
-        /*theme: ThemeData(
-          colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.teal),
-        ),*/
-        home: SplashScreen());
+        debugShowCheckedModeBanner: false, home: SplashScreen());
   }
 }

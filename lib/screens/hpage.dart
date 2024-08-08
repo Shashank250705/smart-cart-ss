@@ -1,17 +1,28 @@
 import 'dart:async';
+import 'dart:io';
+import 'package:bloc_flutter/notification.dart';
+import 'package:bloc_flutter/screens/item_search.dart';
+import 'package:bloc_flutter/screens/my_drawer_header.dart';
+import 'package:bloc_flutter/screens/pages/page1.dart';
+import 'package:bloc_flutter/screens/pages/page2.dart';
+import 'package:bloc_flutter/screens/pages/page3.dart';
+import 'package:bloc_flutter/screens/pages/page4.dart';
+import 'package:bloc_flutter/screens/product_details.dart';
+import 'package:bloc_flutter/screens/welcome_page.dart';
+import 'package:bloc_flutter/screens/wish_list_page.dart';
+import 'package:bloc_flutter/view_all_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 import 'package:barcode_scan2/barcode_scan2.dart';
+import 'package:lottie/lottie.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'cart_page.dart';
-import 'my_drawer_header.dart';
-import 'pages/page1.dart';
-import 'pages/page2.dart';
-import 'pages/page3.dart';
-import 'pages/page4.dart';
 
+//homepage
 class Homepage extends StatefulWidget {
-  const Homepage({super.key});
+  final DocumentSnapshot<Object?> userData;
+  const Homepage({super.key, required this.userData});
 
   @override
   _HomepageState createState() => _HomepageState();
@@ -19,53 +30,29 @@ class Homepage extends StatefulWidget {
 
 class _HomepageState extends State<Homepage> {
   final PageController _controller1 = PageController();
-  final PageController _controller2 = PageController();
+  //final PageController _controller2 = PageController();
+  final PageController _controller3 = PageController();
+
   Timer? _timer;
 
-  final List<Map<String, dynamic>> items = [
-    {
-      'photo':
-          'https://imgs.search.brave.com/VXHNQuW-asIW6Qog0gd9B_hjRkneXnB2YJ4rT_GGi5o/rs:fit:860:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTcz/MjQyNzUwL3Bob3Rv/L2JhbmFuYS1idW5j/aC5qcGc_cz02MTJ4/NjEyJnc9MCZrPTIw/JmM9TUFjOEFYVno1/S3h3V2VFbWg3NVd3/SDZqX0hvdVJjekJG/QWh1bExBdFJVVT0',
-      'name': 'BANANA',
-      'price': 29.99,
-    },
-    {
-      'photo':
-          'https://imgs.search.brave.com/6T9ebo_LZ3tRxAdcdKu4DU-RbkKLVYv_a6WTpzwMtdo/rs:fit:860:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvNDU1/MDQ5MzY3L3Bob3Rv/L2JyZWFkLXNsaWNl/cy5qcGc_cz02MTJ4/NjEyJnc9MCZrPTIw/JmM9Mnh4Y3ZaRnh6/T0NUc2NmdXo0My1L/T3BjTnp2MTJYeDFV/ZVMyNE1Pcng1Zz0',
-      'name': 'bread',
-      'price': 19.99,
-    },
-    {
-      'photo':
-          'https://imgs.search.brave.com/sUn59m48gAf7Kdp3Sm6ry6hcH2RPrfaXBcPWGR_5kNc/rs:fit:500:0:0/g:ce/aHR0cHM6Ly90My5m/dGNkbi5uZXQvanBn/LzAwLzUzLzUxLzYy/LzM2MF9GXzUzNTE2/MjYxXzhaS2lrRDdF/V0FXYnl1bWhLRjRJ/eG1xTnVvYUxVb2tU/LmpwZw',
-      'name': 'pea',
-      'price': 49.99,
-    },
-    {
-      'photo':
-          'https://imgs.search.brave.com/M6u3m7J3bZymw167mdLJAzAFZ-O27sh3EqyczI_xxNg/rs:fit:860:0:0/g:ce/aHR0cHM6Ly9pbWFn/ZXMudW5zcGxhc2gu/Y29tL3Bob3RvLTE1/MjM0NzM4Mjc1MzMt/MmE2NGQwZDM2NzQ4/P3E9ODAmdz0xMDAw/JmF1dG89Zm9ybWF0/JmZpdD1jcm9wJml4/bGliPXJiLTQuMC4z/Jml4aWQ9TTN3eE1q/QTNmREI4TUh4elpX/RnlZMmg4TVRGOGZH/MXBiR3Q4Wlc1OE1I/eDhNSHg4ZkRBPQ',
-      'name': 'Milk',
-      'price': 59.99,
-    },
-    {
-      'photo':
-          'https://imgs.search.brave.com/swvluGcCuyYD8EghhD5HJ25gmcM8-iXBvTS0CcKqISA/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvNTMx/MjA0NTUxL3Bob3Rv/L3RocmVlLWNhcnJv/dHMtaW4tYS1yb3cu/anBnP3M9NjEyeDYx/MiZ3PTAmaz0yMCZj/PUxfbmw3VnZjcW1r/emU5UXliYk1EeU9H/dTUyQUIyZ0xFWVJk/QUlTTVdEQ0E9',
-      'name': 'Carrot',
-      'price': 39.99,
-    },
-    {
-      'photo':
-          'https://imgs.search.brave.com/QBKZ0tFJulGvtoQpxi0nVZ513fiZ1yfAO4h_17YkEdU/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/ZnJlZS1waG90by9v/cmFuZ2UtanVpY2Vf/MjMtMjE0ODA3OTUz/NS5qcGc_c2l6ZT02/MjYmZXh0PWpwZw',
-      'name': 'Orange juice',
-      'price': 24.99,
-    },
-  ];
-
   List<Map<String, dynamic>> cartItems = [];
+  List<Map<String, dynamic>> wishlistItems = [];
+  List<Map<String, dynamic>> items = [];
+  static const int listViewLimit = 4;
+  static const int gridViewLimit = 6;
+  static const int smooth = 4;
+
+  Future<void> fetchItems() async {
+    final snapshot = await FirebaseFirestore.instance.collection('items').get();
+    setState(() {
+      items = snapshot.docs.map((doc) => doc.data()).toList();
+    });
+  }
 
   @override
   void initState() {
     super.initState();
+    fetchItems();
     _timer = Timer.periodic(const Duration(seconds: 3), (Timer timer) {
       int nextPage1 = _controller1.page!.round() + 1;
       if (nextPage1 >= 4) {
@@ -76,15 +63,6 @@ class _HomepageState extends State<Homepage> {
         duration: const Duration(milliseconds: 500),
         curve: Curves.easeIn,
       );
-      int nextPage2 = _controller2.page!.round() + 1;
-      if (nextPage2 >= 4) {
-        nextPage2 = 0;
-      }
-      _controller2.animateToPage(
-        nextPage2,
-        duration: const Duration(milliseconds: 500),
-        curve: Curves.easeIn,
-      );
     });
   }
 
@@ -92,7 +70,8 @@ class _HomepageState extends State<Homepage> {
   void dispose() {
     _timer?.cancel();
     _controller1.dispose();
-    _controller2.dispose();
+    //_controller2.dispose();
+    _controller3.dispose();
     super.dispose();
   }
 
@@ -108,6 +87,14 @@ class _HomepageState extends State<Homepage> {
             builder: (context) => CartPage(cartItems: cartItems),
           ),
         );
+      } else if (index == 2) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => WishlistPage(
+                wishlistItems: wishlistItems, cartItems: cartItems),
+          ),
+        );
       }
     });
   }
@@ -117,19 +104,34 @@ class _HomepageState extends State<Homepage> {
       var result = await BarcodeScanner.scan();
       if (result.type == ResultType.Barcode) {
         String barcode = result.rawContent;
-        // Add the product to the cart based on the scanned barcode
-        // This is just a simple example, you can customize how you want to handle barcodes
-        for (var item in items) {
-          if (item['name'].toLowerCase() == barcode.toLowerCase()) {
-            setState(() {
-              cartItems.add(item);
-            });
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Product added to cart')),
-            );
-            break;
+        bool itemFound = false;
+        setState(() {
+          for (var cartItem in cartItems) {
+            if (cartItem['barcode'] == barcode) {
+              // Assuming you have a quantity field in cartItem
+              cartItem['quantity'] = (cartItem['quantity'] ?? 1) + 1;
+              itemFound = true;
+              break;
+            }
           }
-        }
+          if (!itemFound) {
+            for (var item in items) {
+              if (item['barcode'] == barcode) {
+                cartItems.add({
+                  'barcode': item['barcode'],
+                  'photo': item['photo'],
+                  'name': item['name'],
+                  'price': item['price'],
+                  'quantity': 1, // Assuming you start with a quantity of 1
+                });
+                break;
+              }
+            }
+          }
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Product added to cart')),
+        );
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -149,13 +151,20 @@ class _HomepageState extends State<Homepage> {
             icon: const Icon(Icons.camera_alt),
             onPressed: scanBarcode,
           ),
+          IconButton(
+            icon: const Icon(Icons.search),
+            onPressed: () {
+              showSearch(context: context, delegate: ItemSearch(items));
+            },
+          ),
         ],
       ),
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
             SizedBox(
-              height: 200,
+              height: 300.0,
+              width: 600,
               child: PageView(
                 controller: _controller1,
                 children: const <Widget>[
@@ -166,7 +175,7 @@ class _HomepageState extends State<Homepage> {
                 ],
               ),
             ),
-            const SizedBox(height: 16.0),
+            const SizedBox(height: 4.0),
             SmoothPageIndicator(
               controller: _controller1,
               count: 4,
@@ -178,89 +187,215 @@ class _HomepageState extends State<Homepage> {
             ),
             const SizedBox(height: 16.0),
             SizedBox(
-              height: 200,
+              height: 300.0,
               child: PageView(
-                controller: _controller2,
-                children: const <Widget>[
-                  Page1(),
-                  Page2(),
-                  Page3(),
-                  Page4(),
+                controller: _controller3,
+                children: <Widget>[
+                  for (var item in items)
+                    Container(
+                      margin: const EdgeInsets.all(8.0),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16.0),
+                        border: Border.all(color: Colors.grey),
+                      ),
+                      child: Column(
+                        children: <Widget>[
+                          Expanded(
+                            child: item['photo'].startsWith('http')
+                                ? Image.network(
+                                    item['photo'],
+
+                                    //height: 50,
+                                    fit: BoxFit.fitHeight,
+                                    width: double.infinity,
+                                  )
+                                : Image.file(
+                                    File(item['photo']),
+
+                                    width: double.infinity,
+                                    //height: 50,
+                                    fit: BoxFit.fitHeight,
+                                  ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              children: <Widget>[
+                                Text(
+                                  item['name'],
+                                  style: const TextStyle(
+                                    fontSize: 18.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 8.0),
+                                Text(
+                                  '₹${item['price']}',
+                                  style: const TextStyle(
+                                    fontSize: 16.0,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    IconButton(
+                                      icon: const Icon(Icons.shopping_cart),
+                                      onPressed: () {
+                                        setState(() {
+                                          cartItems.add(item);
+                                        });
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                              content: Text(
+                                                  'Product added to cart')),
+                                        );
+                                      },
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(Icons.favorite),
+                                      onPressed: () {
+                                        setState(() {
+                                          wishlistItems.add(item);
+                                        });
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                              content: Text(
+                                                  'Product added to wishlist')),
+                                        );
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                 ],
               ),
             ),
             const SizedBox(height: 16.0),
             SmoothPageIndicator(
-              controller: _controller2,
-              count: 4,
+              controller: _controller3,
+              count: items.take(smooth).length,
               effect: const ExpandingDotsEffect(
                 dotHeight: 10.0,
                 dotWidth: 10.0,
                 activeDotColor: Colors.purple,
               ),
             ),
-            const SizedBox(height: 32.0),
+            const SizedBox(height: 16.0),
             GridView.builder(
-              physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                crossAxisSpacing: 16.0,
-                mainAxisSpacing: 16.0,
-                childAspectRatio: 0.7,
+                childAspectRatio: 3 / 4,
+                crossAxisSpacing: 8.0,
+                mainAxisSpacing: 8.0,
               ),
-              itemCount: items.length,
+              itemCount: items.take(gridViewLimit).length,
               itemBuilder: (BuildContext context, int index) {
-                return Card(
-                  elevation: 5,
-                  margin: const EdgeInsets.symmetric(vertical: 10.0),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
+                final item = items[index];
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ProductDetailsPage(product: item),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16.0),
+                      border: Border.all(color: Colors.grey),
+                    ),
                     child: Column(
-                      children: [
-                        Image.network(
-                          items[index]['photo'],
-                          height: 100,
-                          width: 100,
-                          fit: BoxFit.cover,
+                      children: <Widget>[
+                        Expanded(
+                          child: item['photo'].startsWith('http')
+                              ? Image.network(
+                                  item['photo'],
+
+                                  //height: 50,
+                                  fit: BoxFit.fitHeight,
+                                  width: double.infinity,
+                                )
+                              : Image.file(
+                                  File(item['photo']),
+
+                                  width: double.infinity,
+                                  //height: 50,
+                                  fit: BoxFit.fitHeight,
+                                ),
                         ),
-                        const SizedBox(height: 8.0),
-                        Text(
-                          items[index]['name'],
-                          style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            children: <Widget>[
+                              Text(
+                                item['name'],
+                                style: const TextStyle(
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(height: 8.0),
+                              Text(
+                                '₹${item['price']}',
+                                style: const TextStyle(
+                                  fontSize: 16.0,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  IconButton(
+                                    icon: Lottie.asset(
+                                      'asset/animations/addtocart.json',
+                                      width: 24,
+                                      height: 24,
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        cartItems.add(item);
+                                      });
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        const SnackBar(
+                                            content:
+                                                Text('Product added to cart')),
+                                      );
+                                    },
+                                  ),
+                                  IconButton(
+                                    icon: Lottie.asset(
+                                      'asset/animations/wishlist.json',
+                                      width: 24,
+                                      height: 24,
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        wishlistItems.add(item);
+                                      });
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        const SnackBar(
+                                            content: Text(
+                                                'Product added to wishlist')),
+                                      );
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
-                        ),
-                        const SizedBox(height: 8.0),
-                        Text(
-                          '\$${items[index]['price']}',
-                          style: const TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey,
-                          ),
-                        ),
-                        const SizedBox(height: 8.0),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Lottie.asset(
-                              'asset/animations/wishlist.json',
-                              width: 50,
-                              height: 50,
-                              onLoaded: (composition) {
-                                // Add to Wishlist functionality here
-                              },
-                            ),
-                            Lottie.asset(
-                              'asset/animations/addtocart.json',
-                              width: 50,
-                              height: 50,
-                              onLoaded: (composition) {
-                                // Add to Cart functionality here
-                              },
-                            ),
-                          ],
                         ),
                       ],
                     ),
@@ -282,7 +417,11 @@ class _HomepageState extends State<Homepage> {
                   ),
                   TextButton(
                     onPressed: () {
-                      // Implement action on button press
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const ViewAllPage()),
+                      );
                     },
                     child: const Text(
                       'View All',
@@ -295,119 +434,131 @@ class _HomepageState extends State<Homepage> {
                 ],
               ),
             ),
-            const SizedBox(height: 10.0),
+            const SizedBox(height: 4.0),
             SizedBox(
-              height: 200.0,
+              height: 300.0,
+              //width: 00.0,
               child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: items.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      width: 300.0,
-                      height: 300,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(16.0),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          ClipRRect(
-                            borderRadius: const BorderRadius.vertical(
-                              top: Radius.circular(16.0),
-                            ),
-                            child: Image.network(
-                              items[index]['photo'],
-                              height: 80.0,
-                              width: double.infinity,
-                              fit: BoxFit.cover,
-                            ),
+                  scrollDirection: Axis.horizontal,
+                  itemCount: items.take(listViewLimit).length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final item = items[index];
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                ProductDetailsPage(product: item),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  items[index]['name'],
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16.0,
-                                  ),
+                        );
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          width: 300.0,
+                          height: 300,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              ClipRRect(
+                                borderRadius: const BorderRadius.vertical(
+                                  top: Radius.circular(16.0),
                                 ),
-                                const SizedBox(height: 1.0),
-                                Text(
-                                  '\$ ${items[index]['price'].toString()}',
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16.0,
-                                    color: Colors.purple,
-                                  ),
-                                ),
-                                //const SizedBox(height: 8.0),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
+                                child: item['photo'].startsWith('http')
+                                    ? Image.network(
+                                        items[index]['photo'],
+                                        height: 150,
+                                        fit: BoxFit.fitHeight,
+                                        width: double.infinity,
+                                      )
+                                    : Image.file(
+                                        File(items[index]['photo']),
+                                        width: double.infinity,
+                                        height: 150,
+                                        fit: BoxFit.fitHeight,
+                                      ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(6.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    IconButton(
-                                      icon: Lottie.asset(
-                                        'asset/animations/addtocart.json',
-                                        width: 24,
-                                        height: 24,
+                                    Text(
+                                      items[index]['name'],
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16.0,
                                       ),
-                                      onPressed: () {
-                                        // Implement add to cart functionality
-                                        setState(() {
-                                          cartItems.add(items[index]);
-                                        });
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          const SnackBar(
-                                            content: Text('Added to Cart'),
-                                          ),
-                                        );
-                                      },
                                     ),
-                                    IconButton(
-                                      icon: Lottie.asset(
-                                        'asset/animations/wishlist.json',
-                                        width: 24,
-                                        height: 24,
+                                    //const SizedBox(height: 1.0),
+                                    Text(
+                                      '\₹ ${items[index]['price'].toString()}',
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16.0,
+                                        color: Colors.purple,
                                       ),
-                                      onPressed: () {
-                                        // Implement add to wishlist functionality
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          const SnackBar(
-                                            content: Text('Added to Wishlist'),
+                                    ),
+                                    //const SizedBox(height: 8.0),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        IconButton(
+                                          icon: Lottie.asset(
+                                            'asset/animations/addtocart.json',
+                                            width: 24,
+                                            height: 24,
                                           ),
-                                        );
-                                      },
+                                          onPressed: () {
+                                            // Implement add to cart functionality
+                                            setState(() {
+                                              cartItems.add(items[index]);
+                                            });
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              const SnackBar(
+                                                content: Text('Added to Cart'),
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                        IconButton(
+                                          icon: Lottie.asset(
+                                            'asset/animations/wishlist.json',
+                                            width: 24,
+                                            height: 24,
+                                          ),
+                                          onPressed: () {
+                                            setState(() {
+                                              wishlistItems.add(items[index]);
+                                            });
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              const SnackBar(
+                                                  content: Text(
+                                                      'Product added to wishlist')),
+                                            );
+                                          },
+                                        ),
+                                      ],
                                     ),
                                   ],
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
-                    ),
-                  );
-                },
-              ),
+                    );
+                  }),
             ),
           ],
-        ),
-      ),
-      drawer: const Drawer(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              MyHeaderDrawer(),
-              MyDrawerList(),
-            ],
-          ),
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -430,16 +581,40 @@ class _HomepageState extends State<Homepage> {
           ),
           BottomNavigationBarItem(
             icon: Lottie.asset(
-              'asset/animations/profile.json',
+              'asset/animations/wishlist.json',
               width: 24,
               height: 24,
             ),
-            label: 'Profile',
+            label: 'WishList',
           ),
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.purple,
         onTap: _onItemTapped,
+      ),
+      drawer: Drawer(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              FutureBuilder<User?>(
+                future: Future.value(FirebaseAuth.instance.currentUser),
+                builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError || !snapshot.hasData) {
+                    return const Center(child: Text('No user is logged in'));
+                  } else {
+                    final User? user = snapshot.data;
+                    return user != null
+                        ? MyHeaderDrawer(userId: user.uid)
+                        : const Center(child: Text('No user is logged in'));
+                  }
+                },
+              ),
+              const MyDrawerList(),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -462,25 +637,43 @@ class MyDrawerList extends StatelessWidget {
             },
           ),
           menuItem(
-            'asset/animations/addtocart.json',
-            'Cart',
+            'asset/animations/notification.json',
+            'Notifications',
             () {
-              // Handle Cart press
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const NotificationScreen()),
+              );
             },
           ),
-          menuItem(
-            'asset/animations/info.json',
-            'About us',
-            () {
-              // Handle Profile press
-            },
-          ),
-          menuItem(
-            'asset/animations/settings.json',
-            'Settings',
-            () {
-              // Handle Profile press
-            },
+          InkWell(
+            /*onTap: () {
+              // Perform sign out logic
+              FirebaseAuth.instance.signOut();
+              // Navigate to WelcomeScreen and remove all previous routs
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => const WelcomeScreen()),
+                (Route<dynamic> route) =>
+                    false, // Remove all routes from the stack
+              );
+            },**/
+            child: menuItem(
+              'asset/animations/signout.json',
+              'Sign Out',
+              () {
+                onTap() {
+                  FirebaseAuth.instance.signOut();
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const WelcomeScreen()),
+                    (Route<dynamic> route) => false,
+                  );
+                }
+              },
+            ),
           ),
         ],
       ),
@@ -497,8 +690,8 @@ class MyDrawerList extends StatelessWidget {
             children: [
               Lottie.asset(
                 lottieUrl,
-                width: 24,
-                height: 24,
+                width: 30,
+                height: 30,
               ),
               const SizedBox(width: 20.0),
               Text(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+//payment page
 class PaymentPage extends StatelessWidget {
   final double totalAmount;
 
@@ -19,14 +20,14 @@ class PaymentPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Total Amount: \$${totalAmount.toStringAsFixed(2)}',
+                'Total Amount: \₹${totalAmount.toStringAsFixed(2)}',
                 style:
                     const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 16),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.purple,
+                  backgroundColor: Colors.orange,
                   padding:
                       const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
                 ),
