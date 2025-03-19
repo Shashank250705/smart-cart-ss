@@ -1,4 +1,4 @@
-# bloc_flutter
+# Smart Cart
 
 A new Flutter project.
 
