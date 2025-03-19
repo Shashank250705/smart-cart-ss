@@ -74,7 +74,7 @@ class _HomepageState extends State<Homepage> {
     _controller3.dispose();
     super.dispose();
   }
-
+//Home Page Routing to Cart Page
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
